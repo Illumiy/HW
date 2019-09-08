@@ -39,14 +39,15 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Login2.0', 'url' => ['/user/security/login']],
+            ['label' => 'admin', 'url' => ['/user/admin/index']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'HW', 'url' => ['/site/homework']],
             Yii::$app->user->isGuest ?
-    ['label' => 'Логин', 'url' => ['/user/security/login']] :
-    ['label' => 'Выйти (' . Yii::$app->user->identity->username . ')',
-        'url' => ['/user/security/logout'],
-        'linkOptions' => ['data-method' => 'post']],
-['label' => 'Регистрация', 'url' => ['/user/registration/register'], 'visible' => Yii::$app->user->isGuest]
+             ['label' => 'Логин', 'url' => ['/user/security/login']] :
+             ['label' => 'Выйти (' . Yii::$app->user->identity->username . ')',
+            'url' => ['/user/security/logout'],
+            'linkOptions' => ['data-method' => 'post']],
+             ['label' => 'Регистрация', 'url' => ['/user/registration/register'], 'visible' => Yii::$app->user->isGuest]
             // Yii::$app->user->isGuest ? (
             //     ['label' => 'Login', 'url' => ['/site/login']]
             // ) : (

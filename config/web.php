@@ -14,8 +14,9 @@ $config = [
             'enableUnconfirmedLogin' => true,
             'confirmWithin' => 21600,
             'cost' => 12,
-            'admins' => ['admin']
+            'admins' => ['123456']
         ],
+        'rbac' => 'dektrium\rbac\RbacWebModule',
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -51,6 +52,9 @@ $config = [
                     'levels' => ['error', 'warning'],
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => 'dektrium\rbac\components\DbManager',
         ],
         'db' => $db,
         'urlManager' => [

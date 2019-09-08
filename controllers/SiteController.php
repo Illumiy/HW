@@ -27,6 +27,11 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['contact'],
+                        'allow' => true,
+                        'roles' => ['admins'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -62,6 +67,18 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+    public function actionHomework()
+    {
+        return $this->render('Homework');
+    }
+    public function actionHomeworkbook()
+    {
+        return $this->render('Homeworkbook');
+    }
+    public function actionKupit()
+    {
+        return $this->render('Kupit');
     }
 
     /**

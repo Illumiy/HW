@@ -13,6 +13,9 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
+    'modules' => [
+        'rbac' => 'dektrium\rbac\RbacConsoleModule',
+    ],
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
