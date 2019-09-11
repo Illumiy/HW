@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\User;
 use app\models\Post;
 use app\models\PostSearch;
 use yii\web\Controller;

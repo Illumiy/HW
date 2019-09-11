@@ -2,7 +2,12 @@
 
 namespace app\models;
 
+use app\models\User;
+use \yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
 use Yii;
+use \yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -18,12 +23,34 @@ use Yii;
  */
 class Post extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
+    public $updatedByAttribute = false;
     public static function tableName()
     {
         return 'post';
+    }
+
+    public function behaviors()
+    {
+
+        return [
+            [   //ЗаПись времени
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new \yii\db\Expression('NOW()'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'author_id',
+                'updatedByAttribute' => false,
+            ],
+        ];
     }
 
     /**
@@ -32,12 +59,9 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'body', 'created_at', 'updated_at'], 'required'],
+            [['title', 'body'], 'required'],
             [['body'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['author_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
 
