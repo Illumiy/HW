@@ -27,6 +27,22 @@ class PostController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['index', 'create', 'delete','view','update'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['admin','@','manager'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create','update'],
+                        'roles' => ['manager','admin'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -66,7 +82,7 @@ class PostController extends Controller
     public function actionCreate()
     {
         $model = new Post();
-
+        $params = new Post();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

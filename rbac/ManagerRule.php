@@ -1,15 +1,16 @@
 <?php
-
 namespace app\rbac;
 
+
+use yii\helpers\VarDumper;
 use yii\rbac\Rule;
 
 /**
  * Проверяем authorID на соответствие с пользователем переданным через параметры
  */
-class AuthorRule extends Rule
+class ManagerRule extends Rule
 {
-    public $name = 'updateOwnPost';
+    public $name = 'isManager';
 
     /**
      * @param string|integer $user the user ID.
@@ -19,6 +20,9 @@ class AuthorRule extends Rule
      */
     public function execute($user, $item, $params)
     {
+        print_r($params);
+        die;
         return isset($params['post']) ? $params['post']->author_id == $user : false;
+
     }
 }

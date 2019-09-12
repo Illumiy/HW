@@ -14,7 +14,7 @@ $config = [
             'enableUnconfirmedLogin' => true,
             'confirmWithin' => 21600,
             'cost' => 12,
-            'admins' => ['123456']
+            'admins' => ['Illum']
         ],
         'rbac' => 'dektrium\rbac\RbacWebModule',
     ],
