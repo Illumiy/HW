@@ -7,138 +7,124 @@ use app\models\User;
 use app\models\Post;
 use app\models\PostSearch;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 
 /**
  * PostController implements the CRUD actions for Post model.
  */
-class PostController extends Controller
-{
+class PostController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
+            'verbs'  => [
+                'class'   => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => [ 'POST' ],
                 ],
             ],
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
-                'only' => ['index', 'create', 'delete','view','update'],
+                'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
-                        'actions' => ['index', 'view'],
-                        'roles' => ['admin','@','manager'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['create','update'],
-                        'roles' => ['manager','admin'],
+                        'allow'   => true,
+                        'roles'   => [ 'manager','admin' ],
                     ],
                 ],
             ],
         ];
     }
-
     /**
      * Lists all Post models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new PostSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
+    public function actionIndex() {
+        $searchModel  = new PostSearch();
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+        return $this->render( 'index', [
+            'searchModel'  => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
+        ] );
     }
-
     /**
      * Displays a single Post model.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+    public function actionView( $id ) {
+        return $this->render( 'view', [
+            'model' => $this->findModel( $id ),
+        ] );
     }
-
     /**
      * Creates a new Post model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
+        //  VarDumper::dump(Yii::$app->user,10,true);
         $model = new Post();
-        $params = new Post();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ( $model->load( Yii::$app->request->post() ) ) {
+            $model->save();
+            return $this->redirect( [ 'view', 'id' => $model->id ] );
         }
-
-        return $this->render('create', [
+        return $this->render( 'create', [
             'model' => $model,
-        ]);
+        ] );
     }
-
     /**
-     * Updates an existing Post model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     *
+     * @return string|\yii\web\Response
+     * @throws HttpException
+     * @throws NotFoundHttpException
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    public function actionUpdate( $id ) {
+        $model = $this->findModel( $id );
+        if (!\Yii::$app->user->can('CanEditOwnPost', ['post' => $model])) {
+            throw new HttpException(403,'You don\'t have premission');
         }
-
-        return $this->render('update', [
+        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
+            return $this->redirect( [ 'view', 'id' => $model->id ] );
+        }
+        return $this->render( 'update', [
             'model' => $model,
-        ]);
+        ] );
     }
-
     /**
      * Deletes an existing Post model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+    public function actionDelete( $id ) {
+        $this->findModel( $id )->delete();
+        return $this->redirect( [ 'index' ] );
     }
-
     /**
      * Finds the Post model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
+     *
      * @param integer $id
+     *
      * @return Post the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Post::findOne($id)) !== null) {
+    protected function findModel( $id ) {
+        if ( ( $model = Post::findOne( $id ) ) !== null ) {
             return $model;
         }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException( 'The requested page does not exist.' );
     }
 }
