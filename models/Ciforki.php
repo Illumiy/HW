@@ -37,7 +37,54 @@ class Ciforki extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
+
+    public static function getMenu()
+    {
+        $flag=0;
+        $role_id = 1;
+        $result = static::getMenuRecrusive($role_id,$flag);
+        return $result;
+    }
+
+    private static function getMenuRecrusive($parent,$flag=0)
+    {
+    if($flag==0) {
+        $items = ciforki::find()
+            ->where(['parent' => $parent])
+            ->asArray()
+            ->all();
+        print_r($items);
+        die;
+        $result = [];
+        $flag=1;
+        static::getMenuRecrusive($items,$flag);
+    }
+    elseif($flag==1){
+
+        $result[] = [
+            'label' => $parent['name'],
+            'url' => ['#'],
+            'items' => static::getMenuRecrusive($item['id']),
+            '<li class="divider"></li>',
+        ];
+    }
+
+
+        return $result;
+    }
+
+
+
+//        foreach ($items as $item) {
+//        $result[] = [
+//        'label' => $item['c_name'],
+//        'url' => ['#'],
+//        'items' => static::getMenuRecrusive($item['id']),
+//        '<li class="divider"></li>',
+//        ];
+//        }
+
+            /**
      * {@inheritdoc}
      */
     public function attributeLabels()

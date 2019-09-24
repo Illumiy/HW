@@ -7,7 +7,6 @@ use yii\widgets\Menu;
 
 <?php
 
-VarDumper::dump($model2,10,true);
 echo Menu::widget([
     'items' => [
         // Important: you need to specify url as 'controller/action',
