@@ -41,6 +41,7 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'admin', 'url' => ['/user/admin/index']],
             ['label' => 'Post', 'url' => ['/post/index']],
+            ['label' => 'Laba4', 'url' => ['/ciforki/index']],
             ['label' => 'HW', 'url' => ['/site/homework']],
             Yii::$app->user->isGuest ?
              ['label' => 'Логин', 'url' => ['/user/security/login']] :

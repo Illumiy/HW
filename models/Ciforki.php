@@ -16,6 +16,7 @@ use Yii;
  */
 class Ciforki extends \yii\db\ActiveRecord
 {
+    
     /**
      * {@inheritdoc}
      */
@@ -46,30 +47,29 @@ class Ciforki extends \yii\db\ActiveRecord
         return $result;
     }
 
-    private static function getMenuRecrusive($parent,$flag=0)
+    private static function getMenuRecrusive($parent,$flag=0,$N=0)
     {
     if($flag==0) {
         $items = ciforki::find()
             ->where(['parent' => $parent])
             ->asArray()
             ->all();
-        print_r($items);
-        die;
         $result = [];
         $flag=1;
-        static::getMenuRecrusive($items,$flag);
+        $N=0;
+        static::getMenuRecrusive($items,$flag,$N);
     }
-    elseif($flag==1){
-
+    elseif($flag==1 && $N<count($parent)){
         $result[] = [
-            'label' => $parent['name'],
+            'label' => $parent[$N]['name'],
             'url' => ['#'],
-            'items' => static::getMenuRecrusive($item['id']),
             '<li class="divider"></li>',
         ];
-    }
-
-
+        static::getMenuRecrusive($parent,$flag,$N);
+        $N++;
+    }else{
+    print_r('kek');
+    die;}
         return $result;
     }
 
