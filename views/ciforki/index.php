@@ -1,26 +1,24 @@
 <?php
 /* @var $this yii\web\View */
 use yii\widgets\Menu;
+use app\models\Ciforki;
  use yii\helpers\VarDumper;
 ?>
 <h1>ciforki/index</h1>
 
 <?php
-
+print_r($result);
 echo Menu::widget([
     'items' => [
         // Important: you need to specify url as 'controller/action',
         // not just as 'controller' even if default action is used.
-        ['label' => 'Home', ],
+        ['label' => 'Home', 'url' => ['site/index']],
         // 'Products' menu item will be selected as long as the route is 'product/index'
-        ['label' => 'Products', 'items' => [
-//            ['label' => 'New Arrivals', 'items' => [
-////                ['label' => 'Most Popular'],
-////                ['label' => 'Most Popular'],
-//            ]],
-//            ['label' => 'Most Popular'],
+        ['label' => 'Products', 'url' => ['product/index'], 'items' => [
+            ['label' => 'New Arrivals', 'url' => ['product/index', 'tag' => 'new']],
+            ['label' => 'Most Popular', 'url' => ['product/index', 'tag' => 'popular']],
         ]],
-        ['label' => 'Login'],
+        ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
     ],
 ]);
 ?>

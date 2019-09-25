@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "ciforki".
@@ -41,36 +42,43 @@ class Ciforki extends \yii\db\ActiveRecord
 
     public static function getMenu()
     {
-        $flag=0;
-        $role_id = 1;
-        $result = static::getMenuRecrusive($role_id,$flag);
-        return $result;
+
+
+    $res=Ciforki::getMenuRecrusive(1,0);
+        VarDumper::dump($res,10,true);
+      //  return $result;
     }
 
-    private static function getMenuRecrusive($parent,$flag=0,$N=0)
+    public static function getMenuRecrusive($parent,$flag=0,$N=0,$result=[])
     {
     if($flag==0) {
-        $items = ciforki::find()
+        $items = Ciforki::find()
             ->where(['parent' => $parent])
             ->asArray()
             ->all();
-        $result = [];
-        $flag=1;
         $N=0;
-        static::getMenuRecrusive($items,$flag,$N);
-    }
-    elseif($flag==1 && $N<count($parent)){
+        static::getMenuRecrusive($items,1,$N,$result);
+        return null;
+    }elseif($flag==1 && $N<count($parent)){
         $result[] = [
             'label' => $parent[$N]['name'],
             'url' => ['#'],
             '<li class="divider"></li>',
         ];
-        static::getMenuRecrusive($parent,$flag,$N);
+        echo '----------------ИУАЩКУ:';
+        VarDumper::dump($result,10,true);
         $N++;
+
+        static::getMenuRecrusive($parent,$flag,$N,$result);
+        return null;
+        echo '----------------AFTER:';
+        VarDumper::dump($result,10,true);
+
     }else{
-    print_r('kek');
-    die;}
+        echo '----------------END:';
+        VarDumper::dump($result,10,true);
         return $result;
+    }
     }
 
 

@@ -10,9 +10,9 @@ class CiforkiController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $ciforki= new Ciforki;
-        $ciforki->getMenu();
-        return $this->render('index');
+
+        $result = Ciforki::getMenu();
+        return $this->render('index',['result'=>$result]);
     }
 
 
